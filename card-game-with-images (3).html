@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shay or Nay - Discussion Cards</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #000000;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-rows: repeat(2, 256px);
+            grid-template-columns: repeat(5, 192px);
+            gap: 48px;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .card {
+            position: relative;
+            width: 192px;
+            height: 256px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            text-align: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-front {
+            padding: 0;
+            background-color: black;
+        }
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .card-question {
+            font-size: 1.125rem;
+            line-height: 1.4;
+            color: #333;
+        }
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #FEED1B;
+        }
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, 192px);
+                grid-template-rows: auto;
+                gap: 24px;
+                padding: 0 20px;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const CardGame = () => {
+            const [flippedCards, setFlippedCards] = React.useState(new Set());
+            
+            const cardImage = "logo.png";
+            
+            const questions = [
+                "What's a place that shaped you as much as any person did?",
+                "Do you think there's more to reality than we can see or touch?",
+                "Where have you experienced awe?",
+                "What is something you think about very differently today than you did 10 years ago?",
+                "What's a lesson you have to keep learning over and over?",
+                "What's a quality you're drawn to that you don't possess?",
+                "What's something people praise you for that doesn't feel like a compliment?",
+                "In what ways do you choose to find joy?",
+                "What's something your parents taught you to appreciate?",
+                "What's a moment when you realized you wanted to make different choices than your parents?"
+            ];
+
+            const toggleCard = (index) => {
+                const newFlipped = new Set(flippedCards);
+                if (newFlipped.has(index)) {
+                    newFlipped.delete(index);
+                } else {
+                    newFlipped.add(index);
+                }
+                setFlippedCards(newFlipped);
+            };
+
+            return (
+                <div className="container">
+                    <h1 className="title">Shay or Nay</h1>
+                    <div className="cards-grid">
+                        {questions.map((question, index) => (
+                            <div 
+                                key={index}
+                                className={`card ${flippedCards.has(index) ? 'flipped' : ''}`}
+                                onClick={() => toggleCard(index)}
+                            >
+                                <div className="card-face card-front">
+                                    <img src={cardImage} alt={`Card ${index + 1}`} />
+                                </div>
+                                <div className="card-face card-back">
+                                    <span className="card-question">{question}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<CardGame />, document.getElementById('root'));
+    </script>
+</body>
+</html>
